@@ -24,3 +24,4 @@ class GlucoseTest(unittest.TestCase):
 
     def test_reading_random(self):
         self.assertEqual([[1, 1], ['--', '--'], [1, '--']], glucose.reading_random([[1, 1], ['--', 3], [1, 2]]))
+        self.assertEqual([[1, 1], [1.3, '--'], [1.3, '--']], glucose.reading_random([[1, 1], [1.3, 3], [1.3, 2]]))

@@ -66,45 +66,48 @@ def reading_stuck_at(list_of_readings):
     return list_of_readings
 
 def reading_random(list_of_readings):
-    #CHECK: if the values are too diferent select the more reliable one if exists
+    #CHECK: if the values are too diferent from the previous valid value discard it
     for i in range(len(list_of_readings)-1, -1, -1):
         if(i > 0):
             if(list_of_readings[i][0] != '--' and list_of_readings[i][1] != '--'):
-                entry_difference = math.fabs(list_of_readings[i][0] - list_of_readings[i][1])
-                if(entry_difference > (list_of_readings[i][0] * admitted_percentage) or entry_difference > (list_of_readings[i][1] * admitted_percentage)):
-                    j = i
-                    while(j != 0):
-                        if(list_of_readings[j-1][0] != '--'):
-                            previous_difference = math.fabs(list_of_readings[i][0] - list_of_readings[j-1][0])
-                            if(previous_difference > (list_of_readings[j-1][0] * admitted_percentage)):
-                                list_of_readings[i][0] = '--'
-                            break
-                        j-=1
-
-                    j = i
-                    while(j != 0):
-                        if(list_of_readings[j-1][1] != '--'):
-                            previous_difference = math.fabs(list_of_readings[i][1] - list_of_readings[j-1][1])
-                            if(previous_difference > (list_of_readings[j-1][1] * admitted_percentage)):
-                                list_of_readings[i][1] = '--'
-                            break
-                        j-=1
-
-            if(list_of_readings[i][0] != '--'):
+                entry_difference = round(math.fabs(list_of_readings[i][0] - list_of_readings[i][1]), 5)
                 j = i
                 while(j != 0):
                     if(list_of_readings[j-1][0] != '--'):
-                        previous_difference = math.fabs(list_of_readings[i][0] - list_of_readings[j-1][0])
-                        if(previous_difference > (list_of_readings[j-1][0] * admitted_percentage)):
+                        previous_difference = round(math.fabs(list_of_readings[i][0] - list_of_readings[j-1][0]), 5)
+                        admitted_difference = round(list_of_readings[j-1][0]*admitted_percentage, 5)
+                        if(previous_difference > admitted_difference):
                             list_of_readings[i][0] = '--'
                         break
                     j-=1
-            if(list_of_readings[i][1] != '--'):
+
                 j = i
                 while(j != 0):
                     if(list_of_readings[j-1][1] != '--'):
-                        previous_difference = math.fabs(list_of_readings[i][1] - list_of_readings[j-1][1])
-                        if(previous_difference > (list_of_readings[j-1][1] * admitted_percentage)):
+                        previous_difference = round(math.fabs(list_of_readings[i][1] - list_of_readings[j-1][1]), 5)
+                        admitted_difference = round(list_of_readings[j-1][1]*admitted_percentage, 5)
+                        if(previous_difference > admitted_difference):
+                            list_of_readings[i][1] = '--'
+                        break
+                    j-=1
+
+            elif(list_of_readings[i][0] != '--'):
+                j = i
+                while(j != 0):
+                    if(list_of_readings[j-1][0] != '--'):
+                        previous_difference = round(math.fabs(list_of_readings[i][0] - list_of_readings[j-1][0]), 5)
+                        admitted_difference = round(list_of_readings[j-1][0]*admitted_percentage, 5)
+                        if(previous_difference > admitted_difference):
+                            list_of_readings[i][0] = '--'
+                        break
+                    j-=1
+            elif(list_of_readings[i][1] != '--'):
+                j = i
+                while(j != 0):
+                    if(list_of_readings[j-1][1] != '--'):
+                        previous_difference = round(math.fabs(list_of_readings[i][1] - list_of_readings[j-1][1]), 5)
+                        admitted_difference = round(list_of_readings[j-1][1]*admitted_percentage, 5)
+                        if(previous_difference > admitted_difference):
                             list_of_readings[i][1] = '--'
                         break
                     j-=1
