@@ -10,7 +10,7 @@ class GlucoseTest(unittest.TestCase):
         self.assertEqual(16.85495, glucose.blood_glucose(4.56224))
 
     def test_parse_reading(self):
-        self.assertEqual([1.23456, 1.23456, '--', 2], glucose.parse_reading([['--', 1.23456],[1.23456, '--'],['--', '--'],[3, 1]]))
+        self.assertEqual([1.23456, 1.23456, 'FAIL', 2], glucose.parse_reading([['--', 1.23456],[1.23456, '--'],['--', '--'],[3, 1]]))
 
     def test_reading_out_of_range(self):
         self.assertEqual([['--', 1], [5, '--'], [1, 5], ['--', '--']], glucose.reading_out_of_range([[0, 1], [5, 6], [1, 5], ['--', '--']]))
@@ -25,3 +25,12 @@ class GlucoseTest(unittest.TestCase):
     def test_reading_random(self):
         self.assertEqual([[1, 1], ['--', '--'], [1, '--']], glucose.reading_random([[1, 1], ['--', 3], [1, 2]]))
         self.assertEqual([[1, 1], [1.3, '--'], [1.3, '--']], glucose.reading_random([[1, 1], [1.3, 3], [1.3, 2]]))
+
+    def test_reading_out_of_sync(self):
+        self.assertRaises(ValueError, glucose.reading_out_of_sync, [[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]])
+        self.assertEquals([[2.1, 2.1], [2.2, 2.2], [2.3, 2.3]], glucose.reading_out_of_sync([[2.1, 2.1], [2.2, 2.2], [2.3, 2.3]]))
+
+    def test_glucose_values(self):
+        self.assertEqual(['FAIL', 'FAIL'], glucose.glucose_values([[0, 0],[0, 0]]))
+        self.assertEqual([0.36019,0.36019], glucose.glucose_values([[1, 1],[0, 1]]))
+        self.assertRaises(ValueError, glucose.glucose_values, [[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]])
