@@ -5,13 +5,13 @@ class GlucoseTest(unittest.TestCase):
     def test_glucose_values(self):
         self.assertEqual(['FAIL'], glucose.glucose_values([[0, 0],[0, 0], [0, 0]], 0))
         self.assertEqual([0.36019], glucose.glucose_values([[1, 1],[0, 1], [0, 1]], 0))
-        self.assertRaises(ValueError, glucose.glucose_values, [[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]], 0)
+        self.assertEqual([2.28006], glucose.glucose_values([[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]], 0))
 
     def test_reading_out_of_range(self):
         self.assertEqual([['--', 1], [5, '--'], [1, 5], ['--', '--']], glucose.reading_out_of_range([[0, 1], [5, 6], [1, 5], ['--', '--']]))
 
     def test_reading_out_of_sync(self):
-        self.assertRaises(ValueError, glucose.reading_out_of_sync, [[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]])
+        self.assertEquals([[1.1, 2.1], [1.2, 2.2], ['--', '--']], glucose.reading_out_of_sync([[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]]))
         self.assertEquals([[2.1, 2.1], [2.2, 2.2], [2.3, 2.3]], glucose.reading_out_of_sync([[2.1, 2.1], [2.2, 2.2], [2.3, 2.3]]))
 
     def test_reading_stuck_at(self):

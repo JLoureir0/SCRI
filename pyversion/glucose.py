@@ -6,36 +6,34 @@ sync_tolerance      = 3
 
 def glucose_values(list_of_readings, variation):
     readings = deepcopy(list_of_readings)
-    try:
-        reading_out_of_range(readings)
-        reading_out_of_sync(readings)
-        reading_stuck_at(readings)
-        reading_random(readings)
 
-        parsed_list = parse_reading(readings)
+    reading_out_of_range(readings)
+    reading_out_of_sync(readings)
+    reading_stuck_at(readings)
+    reading_random(readings)
 
-        for index, reading in enumerate(parsed_list):
-            if(reading != 'FAIL'):
-                #CHECK: memory check for the glucose functions
-                if(variation == 0):
-                    if(blood_glucose(1) == 0.36019):
-                        parsed_list[index] = blood_glucose(reading)
-                    else:
-                        raise ValueError('Memory corrupted')
-                elif(variation == 1):
-                    if(glucose_variation(1.12345) == 2.68741):
-                        parsed_list[index] = glucose_variation(reading)
-                    else:
-                        raise ValueError('Memory corrupted')
-                elif(variation == 2):
-                    if(glucose_variation_variation(1.12345) == 0.12616):
-                        parsed_list[index] = glucose_variation_variation(reading)
-                    else:
-                        raise ValueError('Memory corrupted')
+    parsed_list = parse_reading(readings)
 
-        return glucose_for_dosage(parsed_list)
-    except ValueError, e:
-        raise e
+    for index, reading in enumerate(parsed_list):
+        if(reading != 'FAIL'):
+            #CHECK: memory check for the glucose functions
+            if(variation == 0):
+                if(blood_glucose(1) == 0.36019):
+                    parsed_list[index] = blood_glucose(reading)
+                else:
+                    parsed_list[index] = 'FAIL'
+            elif(variation == 1):
+                if(glucose_variation(1.12345) == 2.68741):
+                    parsed_list[index] = glucose_variation(reading)
+                else:
+                    parsed_list[index] = 'FAIL'
+            elif(variation == 2):
+                if(glucose_variation_variation(1.12345) == 0.12616):
+                    parsed_list[index] = glucose_variation_variation(reading)
+                else:
+                    parsed_list[index] = 'FAIL'
+
+    return glucose_for_dosage(parsed_list)
 
 def reading_out_of_range(list_of_readings):
     for entry in list_of_readings:
@@ -55,18 +53,22 @@ def reading_out_of_sync(list_of_readings):
 
     tolerance = 0
 
-    for reading in list_of_readings:
+    for index, reading in enumerate(list_of_readings):
         if(reading[0] != '--' and reading[1] != '--'):
             entry_difference = round(math.fabs(reading[0] - reading[1]), 5)
             admitted_difference1 = round(reading[0]*admitted_percentage, 5)
             admitted_difference2 = round(reading[1]*admitted_percentage, 5)
+
             if(entry_difference > admitted_difference1 or entry_difference > admitted_difference2):
                 tolerance += 1
             else:
                 tolerance -= 1
 
-    if(tolerance >= sync_tolerance):
-        raise ValueError('Sensors malfunctioning')
+            if(tolerance >= sync_tolerance):
+                list_of_readings[index][0] = '--'
+                list_of_readings[index][1] = '--'
+
+
 
     return list_of_readings
 
