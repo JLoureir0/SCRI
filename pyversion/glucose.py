@@ -1,24 +1,37 @@
 import math
+from copy import deepcopy
 
 admitted_percentage = 0.3
 sync_tolerance      = 3
 
-def glucose_values(list_of_readings):
+def glucose_values(list_of_readings, variation):
+    readings = deepcopy(list_of_readings)
     try:
-        reading_out_of_range(list_of_readings)
-        reading_out_of_sync(list_of_readings)
-        reading_stuck_at(list_of_readings)
-        reading_random(list_of_readings)
+        reading_out_of_range(readings)
+        reading_out_of_sync(readings)
+        reading_stuck_at(readings)
+        reading_random(readings)
 
-        parsed_list = parse_reading(list_of_readings)
+        parsed_list = parse_reading(readings)
 
         for index, reading in enumerate(parsed_list):
             if(reading != 'FAIL'):
-                #CHECK: memory check for the glucose function
-                if(blood_glucose(1) == 0.36019):
-                    parsed_list[index] = blood_glucose(reading)
-                else:
-                    raise ValueError('Memory corrupted')
+                #CHECK: memory check for the glucose functions
+                if(variation == 0):
+                    if(blood_glucose(1) == 0.36019):
+                        parsed_list[index] = blood_glucose(reading)
+                    else:
+                        raise ValueError('Memory corrupted')
+                elif(variation == 1):
+                    if(glucose_variation(1.12345) == 2.68741):
+                        parsed_list[index] = glucose_variation(reading)
+                    else:
+                        raise ValueError('Memory corrupted')
+                elif(variation == 2):
+                    if(glucose_variation_variation(1.12345) == 0.12616):
+                        parsed_list[index] = glucose_variation_variation(reading)
+                    else:
+                        raise ValueError('Memory corrupted')
 
         return glucose_for_dosage(parsed_list)
     except ValueError, e:

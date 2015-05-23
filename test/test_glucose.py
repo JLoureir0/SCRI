@@ -3,9 +3,9 @@ import pyversion.glucose as glucose
 
 class GlucoseTest(unittest.TestCase):
     def test_glucose_values(self):
-        self.assertEqual(['FAIL'], glucose.glucose_values([[0, 0],[0, 0], [0, 0]]))
-        self.assertEqual([0.36019], glucose.glucose_values([[1, 1],[0, 1], [0, 1]]))
-        self.assertRaises(ValueError, glucose.glucose_values, [[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]])
+        self.assertEqual(['FAIL'], glucose.glucose_values([[0, 0],[0, 0], [0, 0]], 0))
+        self.assertEqual([0.36019], glucose.glucose_values([[1, 1],[0, 1], [0, 1]], 0))
+        self.assertRaises(ValueError, glucose.glucose_values, [[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]], 0)
 
     def test_reading_out_of_range(self):
         self.assertEqual([['--', 1], [5, '--'], [1, 5], ['--', '--']], glucose.reading_out_of_range([[0, 1], [5, 6], [1, 5], ['--', '--']]))
