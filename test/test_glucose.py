@@ -45,8 +45,8 @@ class GlucoseTest(unittest.TestCase):
         self.assertEquals([[2.1, 2.1], [2.2, 2.2], [2.3, 2.3]], glucose.reading_out_of_sync([[2.1, 2.1], [2.2, 2.2], [2.3, 2.3]]))
 
     def test_glucose_values(self):
-        self.assertEqual(['FAIL', 'FAIL'], glucose.glucose_values([[0, 0],[0, 0]]))
-        self.assertEqual([0.36019, 0.36019], glucose.glucose_values([[1, 1],[0, 1]]))
+        self.assertEqual(['FAIL'], glucose.glucose_values([[0, 0],[0, 0], [0, 0]]))
+        self.assertEqual([0.36019], glucose.glucose_values([[1, 1],[0, 1], [0, 1]]))
         self.assertRaises(ValueError, glucose.glucose_values, [[1.1, 2.1], [1.2, 2.2], [1.3, 2.3]])
 
     def test_glucose_for_dosage(self):
@@ -58,3 +58,5 @@ class GlucoseTest(unittest.TestCase):
         self.assertEqual([0.36019], glucose.glucose_for_dosage([0.36019, 'FAIL', 'FAIL']))
         self.assertEqual(['FAIL'], glucose.glucose_for_dosage(['FAIL', 'FAIL', 'FAIL']))
         self.assertEqual([2], glucose.glucose_for_dosage([3, 3, 2]))
+        self.assertEqual([2], glucose.glucose_for_dosage([3, 3, 2, 3]))
+        self.assertEqual([2, 3], glucose.glucose_for_dosage([3, 3, 2, 3, 2, 3]))

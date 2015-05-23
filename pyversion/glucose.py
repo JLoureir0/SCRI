@@ -20,7 +20,7 @@ def glucose_values(list_of_readings):
                 else:
                     raise ValueError('Memory corrupted')
 
-        return parsed_list
+        return glucose_for_dosage(parsed_list)
     except ValueError, e:
         raise e
 
