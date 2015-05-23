@@ -28,6 +28,14 @@ def blood_glucose(entry_value):
     glucose_function = -3.4+1.354*entry_value+1.545*math.tan(entry_value**(0.25))
     return round(glucose_function, 5)
 
+def glucose_variation(entry_value):
+    glucose_variation_function = ((0.38625*(1/math.cos(entry_value**0.25)**2))/entry_value**0.75)+1.354
+    return round(glucose_variation_function, 5)
+
+def glucose_variation_variation(entry_value):
+    glucose_variation_variation_function = -(0.289688*((1/math.cos(entry_value**0.25))**2))/entry_value**1.75+(0.193125*((1/math.cos(entry_value**0.25))**2)*math.tan(entry_value**0.25))/entry_value**1.5
+    return round(glucose_variation_variation_function, 5)
+
 def parse_reading(list_of_readings):
     parsed_list = []
     for entry in list_of_readings:
