@@ -24,30 +24,11 @@ def glucose_values(list_of_readings):
     except ValueError, e:
         raise e
 
-def blood_glucose(entry_value):
-    glucose_function = -3.4+1.354*entry_value+1.545*math.tan(entry_value**(0.25))
-    return round(glucose_function, 5)
-
-def glucose_variation(entry_value):
-    glucose_variation_function = ((0.38625*(1/math.cos(entry_value**0.25)**2))/entry_value**0.75)+1.354
-    return round(glucose_variation_function, 5)
-
-def glucose_variation_variation(entry_value):
-    glucose_variation_variation_function = -(0.289688*((1/math.cos(entry_value**0.25))**2))/entry_value**1.75+(0.193125*((1/math.cos(entry_value**0.25))**2)*math.tan(entry_value**0.25))/entry_value**1.5
-    return round(glucose_variation_variation_function, 5)
-
-def parse_reading(list_of_readings):
-    parsed_list = []
+def reading_out_of_range(list_of_readings):
     for entry in list_of_readings:
-        if (entry[0] == '--' and entry[1] == '--'):
-            parsed_list.append('FAIL')
-        elif entry[0] == '--':
-            parsed_list.append(entry[1])
-        elif entry[1] == '--':
-            parsed_list.append(entry[0])
-        else:
-            parsed_list.append((entry[0] + entry[1])/2)
-    return parsed_list
+        entry[0] = out_of_range(entry[0])
+        entry[1] = out_of_range(entry[1])
+    return list_of_readings
 
 def out_of_range(entry_value):
     #CHECK: range for entry_value
@@ -56,10 +37,24 @@ def out_of_range(entry_value):
         return '--'
     return entry_value
 
-def reading_out_of_range(list_of_readings):
-    for entry in list_of_readings:
-        entry[0] = out_of_range(entry[0])
-        entry[1] = out_of_range(entry[1])
+def reading_out_of_sync(list_of_readings):
+    #CHECK: if the values from the sensor are too different from each other raise an exception
+
+    tolerance = 0
+
+    for reading in list_of_readings:
+        if(reading[0] != '--' and reading[1] != '--'):
+            entry_difference = round(math.fabs(reading[0] - reading[1]), 5)
+            admitted_difference1 = round(reading[0]*admitted_percentage, 5)
+            admitted_difference2 = round(reading[1]*admitted_percentage, 5)
+            if(entry_difference > admitted_difference1 or entry_difference > admitted_difference2):
+                tolerance += 1
+            else:
+                tolerance -= 1
+
+    if(tolerance >= sync_tolerance):
+        raise ValueError('Sensors malfunctioning')
+
     return list_of_readings
 
 def reading_stuck_at(list_of_readings):
@@ -146,25 +141,22 @@ def reading_random(list_of_readings):
 
     return list_of_readings
 
-def reading_out_of_sync(list_of_readings):
-    #CHECK: if the values from the sensor are too different from each other raise an exception
+def parse_reading(list_of_readings):
+    parsed_list = []
+    for entry in list_of_readings:
+        if (entry[0] == '--' and entry[1] == '--'):
+            parsed_list.append('FAIL')
+        elif entry[0] == '--':
+            parsed_list.append(entry[1])
+        elif entry[1] == '--':
+            parsed_list.append(entry[0])
+        else:
+            parsed_list.append((entry[0] + entry[1])/2)
+    return parsed_list
 
-    tolerance = 0
-
-    for reading in list_of_readings:
-        if(reading[0] != '--' and reading[1] != '--'):
-            entry_difference = round(math.fabs(reading[0] - reading[1]), 5)
-            admitted_difference1 = round(reading[0]*admitted_percentage, 5)
-            admitted_difference2 = round(reading[1]*admitted_percentage, 5)
-            if(entry_difference > admitted_difference1 or entry_difference > admitted_difference2):
-                tolerance += 1
-            else:
-                tolerance -= 1
-
-    if(tolerance >= sync_tolerance):
-        raise ValueError('Sensors malfunctioning')
-
-    return list_of_readings
+def blood_glucose(entry_value):
+    glucose_function = -3.4+1.354*entry_value+1.545*math.tan(entry_value**(0.25))
+    return round(glucose_function, 5)
 
 def glucose_for_dosage(glucose_list):
     list_for_dosage = []
@@ -184,3 +176,11 @@ def glucose_for_dosage(glucose_list):
         i+=3
 
     return list_for_dosage
+
+def glucose_variation(entry_value):
+    glucose_variation_function = ((0.38625*(1/math.cos(entry_value**0.25)**2))/entry_value**0.75)+1.354
+    return round(glucose_variation_function, 5)
+
+def glucose_variation_variation(entry_value):
+    glucose_variation_variation_function = -(0.289688*((1/math.cos(entry_value**0.25))**2))/entry_value**1.75+(0.193125*((1/math.cos(entry_value**0.25))**2)*math.tan(entry_value**0.25))/entry_value**1.5
+    return round(glucose_variation_variation_function, 5)
