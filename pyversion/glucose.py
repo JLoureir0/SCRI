@@ -157,3 +157,22 @@ def reading_out_of_sync(list_of_readings):
         raise ValueError('Sensors malfunctioning')
 
     return list_of_readings
+
+def glucose_for_dosage(glucose_list):
+    list_for_dosage = []
+
+    i = 2
+
+    while i < len(glucose_list):
+        if(glucose_list[i] != 'FAIL'):
+            list_for_dosage.append(glucose_list[i])
+        elif(glucose_list[i-1] != 'FAIL'):
+            list_for_dosage.append(glucose_list[i-1])
+        elif(glucose_list[i-2] != 'FAIL'):
+            list_for_dosage.append(glucose_list[i-2])
+        else:
+            list_for_dosage.append('FAIL')
+
+        i+=3
+
+    return list_for_dosage
