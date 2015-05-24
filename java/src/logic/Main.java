@@ -15,30 +15,27 @@ public class Main {
 	protected static ArrayList<Float> dosageToInfuse;
 	protected static float INSULINE_MAX_VALUE = (float) 6.0;
 	
-	public static void main(String [] args) {
-		String filePath = args[0];
-		Cli cli = new Cli(filePath);
-		
-		sensorAlpha = new Sensor(0, cli.getFilename(), cli.getSensorAplhaMeasures());
-		sensorBeta = new Sensor(1, cli.getFilename(), cli.getSensorBetaMeasures());
-		int numberOfMeasures =  sensorAlpha.getGlucoseMeasures().size();
-				
-		FaultTolerance.initFaultToleranceMechanisms(numberOfMeasures, sensorAlpha, sensorBeta);
-		
-		measuredValues = FaultTolerance.getMeasuredValues();
-		computeGlucoseValues(measuredValues);
-		
-		computeDosagesToInfuse();
-		checkIfAnyNegativeDosage();
-		printDosageToInfuse();
-		
-		new OutputWriter(dosageToInfuse);
-	}
-
-	private static void printDosageToInfuse() {
-		System.out.println("Dosage to infuse");
-		for(int i = 0; i < dosageToInfuse.size(); i++) {
-			System.out.println(i + ") " + Math.round(dosageToInfuse.get(i)));
+	public static void main(String [] args) {	
+		try {
+			String filePath = args[0];
+			String resultsFilePath = args[1];
+			Cli cli = new Cli(filePath);
+			
+			sensorAlpha = new Sensor(0, cli.getFilename(), cli.getSensorAplhaMeasures());
+			sensorBeta = new Sensor(1, cli.getFilename(), cli.getSensorBetaMeasures());
+			int numberOfMeasures =  sensorAlpha.getGlucoseMeasures().size();
+					
+			FaultTolerance.initFaultToleranceMechanisms(numberOfMeasures, sensorAlpha, sensorBeta);
+			
+			measuredValues = FaultTolerance.getMeasuredValues();
+			computeGlucoseValues(measuredValues);
+			
+			computeDosagesToInfuse();
+			checkIfAnyNegativeDosage();
+			
+			new OutputWriter(resultsFilePath, dosageToInfuse);
+		} catch (Exception e) {
+			System.out.println("Usage: java -jar scri.jar inputFile resultFile");
 		}
 	}
 	
@@ -77,7 +74,6 @@ public class Main {
 				if(glucoseValues.get(i).equals(Float.NaN)) {
 					if(!glucoseValues.get(i - 1).equals(Float.NaN) && !glucoseValues.get(i - 2).equals(Float.NaN)) {
 						glucoseValue = (float) (glucoseValues.get(i - 1) + glucoseValues.get(i - 2) / 2.0);
-						System.out.println("1: " + measuredValues.get(i-2) + " 2: " + measuredValues.get(i-1));
 						measuredValue = (float) ((measuredValues.get(i - 1) + measuredValues.get(i - 2)) / 2.0);
 					} else if(!glucoseValues.get(i - 1).equals(Float.NaN)) {
 						glucoseValue = glucoseValues.get(i - 1);
