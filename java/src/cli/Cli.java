@@ -56,7 +56,6 @@ public class Cli {
 		    }    
 
 		    bufferedReader.close(); 
-		    System.out.println("Done");
 		}
 		catch(FileNotFoundException ex) {
 			System.out.println("Fail");

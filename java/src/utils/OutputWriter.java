@@ -10,8 +10,8 @@ public class OutputWriter {
 	private String filePath = null;
 	private ArrayList<Float> results;
 	
-	public OutputWriter(ArrayList<Float> dosage) {
-		this.filePath = "files/results.txt";
+	public OutputWriter(String filePath, ArrayList<Float> dosage) {
+		this.filePath = filePath;
 		this.results = new ArrayList<Float>();
 		this.results = dosage;
 		writeFileResults();
@@ -28,11 +28,15 @@ public class OutputWriter {
 			
 			 writer = new BufferedWriter(new FileWriter(resultFile, true));
 			 for(int i = 0; i < results.size(); i++) {
-				 
-				 if(results.get(i).equals(Float.NaN))
+				
+				 if(results.get(i).equals(Float.NaN)) {
 					 writer.write("FAIL");
-				 else
+					 System.out.println("FAIL");
+				 }
+				 else {
 					 writer.write("" + Math.round(results.get(i)));
+					 System.out.println(Math.round(results.get(i)));
+				 }
 				 
 				 if((i + 1) < results.size())
 					 writer.write("\n");
