@@ -1,12 +1,15 @@
 import sys
-import glucose
+import insuline
 
 def main():
-    list_of_readings = [line.strip().split() for line in open(sys.argv[1])]
+    try:
+        list_of_readings = [line.strip().split() for line in open(sys.argv[1])]
 
-    parse_list_from_file(list_of_readings)
+        parse_list_from_file(list_of_readings)
 
-    print glucose.glucose_values(list_of_readings)
+        print insuline.calculate_dosages(list_of_readings)
+    except Exception, e:
+        print 'usage: python main.py readings_file'
 
 def parse_list_from_file(list_of_readings):
     for index, reading in enumerate(list_of_readings):

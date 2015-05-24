@@ -1,4 +1,4 @@
-import pyversion.glucose as glu
+import glucose as glu
 
 glucose_limit       = 6
 glucose_trend_limit = -0.4
