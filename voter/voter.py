@@ -67,10 +67,16 @@ def vote_dosage(dosage_v1, dosage_v2, dosage_v3):
             if condition1 and condition2 and condition3:
                 dosage = int(round((int(v1) + int(v2) + int(v3))/3.0))
             elif condition1 and condition2:
-                dosage = int(round((int(v1) + int(v2))/2.0))
+                dosage = int(round((int(v1) + int(v2) + int(v3))/3.0))
             elif condition1 and condition3:
-                dosage = int(round((int(v1) + int(v3))/2.0))
+                dosage = int(round((int(v1) + int(v2) + int(v3))/3.0))
             elif condition2 and condition3:
+                dosage = int(round((int(v1) + int(v2) + int(v3))/3.0))
+            elif condition1:
+                dosage = int(round((int(v1) + int(v2))/2.0))
+            elif condition2:
+                dosage = int(round((int(v1) + int(v3))/2.0))
+            elif condition3:
                 dosage = int(round((int(v2) + int(v3))/2.0))
             else:
                 dosage = 'FAIL'
