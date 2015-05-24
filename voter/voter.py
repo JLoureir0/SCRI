@@ -19,7 +19,7 @@ def main():
 
         output.close()
     except Exception, e:
-        print 'usage: python voter.py filename_v1 filename_v2 filename_v3 filename_output'
+        print 'usage: python voter.py v1_file v2_file v3_file output_file'
 
 def vote_dosage(dosage_v1, dosage_v2, dosage_v3):
     dosage_list = []

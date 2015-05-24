@@ -7,9 +7,18 @@ def main():
 
         parse_list_from_file(list_of_readings)
 
-        print insuline.calculate_dosages(list_of_readings)
+        list_of_dosages = insuline.calculate_dosages(list_of_readings)
+
+        print list_of_dosages
+
+        output = open(sys.argv[2],'w')
+
+        for dosage in list_of_dosages:
+            output.write("%s\n" % dosage)
+
+        output.close()
     except Exception, e:
-        print 'usage: python main.py readings_file'
+        print 'usage: python main.py readings_file output_file'
 
 def parse_list_from_file(list_of_readings):
     for index, reading in enumerate(list_of_readings):
