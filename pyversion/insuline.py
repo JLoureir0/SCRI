@@ -25,7 +25,10 @@ def calculate_dosages(list_of_readings):
             ic = 0.9*ic
         else:
             dosage = int(round(0.8*glucose+0.2*list_for_dosage_variation[index]+0.5*list_for_dosage_variation_variation[index]-ic))
-            list_of_dosages.append(dosage)
+            if dosage < 0:
+                list_of_dosages.append(0)
+            else:
+                list_of_dosages.append(dosage)
 
             ic = dosage+0.9*ic
 
