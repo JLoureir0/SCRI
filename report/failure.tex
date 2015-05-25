@@ -88,7 +88,19 @@ três minutos e se esse valor for maior que 6 é calculada a tendência tendo em
 de 5. Se a têndencia for de descida e maior que 0.4 por minuto é calculada a dose usando as fórmulas fornecidas no
 enunciado do trabalho. Ainda é feita uma verificação com as fórmulas da glucose e das suas derivadas com um valor
 conhecido para verificar se a memória está corrompida.\par
-Calculadas as doses a administrar estas são escritas no ficheiro que foi passado ao programa.
+Calculadas as doses a administrar estas são escritas no ficheiro que foi passado ao programa.\par
+Foi usado uma variação máxima de 30\% entre os valores nas restrições, para não permitir variações fora do que é
+fisicamente possível. Para o cálculo da tendência foi usado um histórico de no máximo 5 leituras, pois os níveis de
+glucose no sangue tendem a ter uma variação uniforme e lenta e este histórico permite calcular uma tendência muito
+próxima da realidade.
 
 \section{Votador}
 \label{sec:votador}
+O votador é um mecanismo simples, desenvolvido em \textit{Python}, de escolha das doses a administrar ao paciente, tendo
+em conta o resultado dos cálculos das três versões acima descritas.\par
+A escolha da dose é feita tendo em conta os seguintes passos: se as todas as doses forem inválidas, o votador retorna
+\textit{FAIL}; se alguma das doses for válida, ele retorna essa dose; se houver mais do que uma dose válida, o votador
+verifica se a diferença entre as doses é superior a 2, caso nenhuma das doses cumpra este requisito ele retorna
+\textit{FAIL}, caso contrário ele retorna a média das duas ou três doses que cumprem esta restrição. A diferença
+máxima entre as doses de cada versão é de dois, porque permite garantir que as doses não se afastem muito do valor
+correto, o que é reforçado pelo uso da média entre os valores válidos.
